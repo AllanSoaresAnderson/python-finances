@@ -8,9 +8,9 @@ from src.domain.enum import TransactionCategory, FrequencyTransaction, VariableF
 
 @dataclass
 class Baggins:
-    id: int
+    id: Optional[int]
     name: str
-    start_date: datetime
+    start_date: Optional[datetime]
     type: TypeBaggins = TypeBaggins.MONTHLY
     amount_time: Optional[int] = None
     date_created: Optional[datetime] = None

@@ -21,6 +21,6 @@ class VariableFrequencyTransaction(Enum):
     DAY = 'D'
 
 
-class TypeBaggins:
+class TypeBaggins(Enum):
     MONTHLY = 'M'
     VARIABLE = 'V'

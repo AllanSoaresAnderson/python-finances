@@ -7,15 +7,15 @@ class DatabaseConnectionSqlLite(ABC):
     """
 
     @abstractmethod
-    def get_connection(self, database: str) -> Connection:
+    def get_connection(self) -> Connection:
         """
         Get a database connection of sqlite
-        :param database:
         :return:
         """
 
 class PrepareDataBaseSqlLite(ABC):
 
     @abstractmethod
-    def prepare(self, database: str):
+    def prepare(self):
         pass
+

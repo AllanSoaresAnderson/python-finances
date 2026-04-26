@@ -2,10 +2,10 @@ from src.infrastructure.interfaces import PrepareDataBaseSqlLite, DatabaseConnec
 
 CREATE_BAGGINS = """
 CREATE TABLE IF NOT EXISTS baggins (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     start_date TEXT NOT NULL,
-    type TEXT NOT NULL DEFAULT 'MONTHLY',
+    type TEXT NOT NULL DEFAULT 'M',
     amount_time INTEGER,
     date_created TEXT,
     deletion_date TEXT
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS baggins (
 
 CREATE_ENTITY = """
 CREATE TABLE IF NOT EXISTS entity (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     is_person INTEGER NOT NULL CHECK (is_person IN (0, 1)),
     id_baggin INTEGER NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS entity (
 
 CREATE_TRANSACTION = """
 CREATE TABLE IF NOT EXISTS transactions (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     category TEXT NOT NULL,
     start_date TEXT NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 CREATE_INSTALLMENT = """
 CREATE TABLE IF NOT EXISTS installment (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     value NUMERIC NOT NULL,
     id_transaction INTEGER,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS installment (
 
 CREATE_PAYMENT = """
 CREATE TABLE IF NOT EXISTS payment (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     value NUMERIC NOT NULL,
     reference_date TEXT NOT NULL,
@@ -89,8 +89,8 @@ class PrepareDataBaseSqlLiteImpl(PrepareDataBaseSqlLite):
     def __init__(self, database: DatabaseConnectionSqlLite):
         self.database = database
 
-    def prepare(self, database: str):
-        with self.database.get_connection(database) as conn:
+    def prepare(self):
+        with self.database.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(CREATE_BAGGINS)
             cursor.execute(CREATE_ENTITY)
