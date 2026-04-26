@@ -3,15 +3,17 @@ from dotenv import load_dotenv
 from application.csv_reader import CsvReaderImpl
 from application.mapper.baggins_mapper import BagginsMapper
 from application.mapper.entity_mapper import EntityMapper
+from application.mapper.transaction_mapper import TransactionMapper
 from application.register_file_use_case import RegisterFileUseCaseImpl
 from application.use_case.crud_file_use_case import CrudFileUseCaseImpl
 from application.use_case.csv_writer import CsvWriterUseCaseImpl
 from application.use_case.show_entities_in_file_use_case import ShowEntitiesInFileUseCaseImpl
 from domain.enum import Table
 from domain.interfaces import CsvReader, MapperUseCase, CrudFileUseCase, CrudRepository, BagginsRepository, \
-    CsvWriterUseCase, EntityRepository
+    CsvWriterUseCase, EntityRepository, TransactionRepository
 from infrastructure.repository.baggins_repository import BagginsRepositoryImpl
 from infrastructure.repository.entity_repository import EntityRepositoryImpl
+from infrastructure.repository.transaction_repository import TransactionRepositoryImpl
 
 load_dotenv()
 from os import getenv
@@ -59,12 +61,19 @@ def _entity_mapper() -> EntityMapper:
     return EntityMapper()
 
 
+def _transaction_mapper() -> TransactionMapper:
+    return TransactionMapper()
+
+
 def _mapper_use_case(table: Table) -> MapperUseCase:
     if table == Table.BAGGINS:
         return _baggins_mapper()
 
     if table == Table.ENTITY:
         return _entity_mapper()
+
+    if table == Table.TRANSACTION:
+        return _transaction_mapper()
 
     raise ValueError('Invalid table')
 
@@ -89,12 +98,25 @@ def _entity_repository() -> EntityRepository:
     return _entity_repository_impl()
 
 
+def _transaction_repository_impl() -> TransactionRepositoryImpl:
+    return TransactionRepositoryImpl(
+        database=_database_connection_sqlite(),
+    )
+
+
+def _transaction_repository() -> TransactionRepository:
+    return _transaction_repository_impl()
+
+
 def _crud_repository(table: Table) -> CrudRepository:
     if table == Table.BAGGINS:
         return _baggins_repository()
 
     if table == Table.ENTITY:
         return _entity_repository()
+
+    if table == Table.TRANSACTION:
+        return _transaction_repository()
 
     raise ValueError('Invalid table')
 
