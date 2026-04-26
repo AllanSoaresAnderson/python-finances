@@ -36,6 +36,12 @@ class CrudRepository(ABC, Generic[T]):
     def delete(self, _id: int) -> None:
         pass
 
+    @abstractmethod
+    def find_all(self) -> List[T]:
+        """
+        Find all entities
+        """
+
 
 class BagginsRepository(CrudRepository[Baggins], ABC):
     pass
@@ -74,3 +80,34 @@ class MapperUseCase(ABC):
         Map a list of dicts to entities
         """
 
+    @abstractmethod
+    def dict_all(self, data: List[Any]) -> List[Dict[str, Any]]:
+        """
+        Map a list to dicts
+        """
+
+    @abstractmethod
+    def to_dict(self, data: Any) -> Dict[str, Any]:
+        """
+        Map a list to dicts
+        """
+
+
+class ShowEntitiesInFileUseCase(ABC):
+    @abstractmethod
+    def show(self, path: str):
+        """
+        Show entities in file
+        :param path: Path to file
+        """
+
+
+class CsvWriterUseCase(ABC):
+    @abstractmethod
+    def write(self, path: str, data: List[Dict[str, Any]]):
+        """
+        Write data to file csv
+        :param path: Path to file
+        :type path: str
+        :param data: List of dicts
+        """

@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from typing import Dict, Any, List
 from datetime import datetime
 
@@ -29,3 +30,12 @@ class BagginsMapper(MapperUseCase):
         for d in data:
             result.append(self.map(d))
         return result
+
+    def dict_all(self, data: List[Any]) -> List[Dict[str, Any]]:
+        result = []
+        for d in data:
+            result.append(self.to_dict(d))
+        return result
+
+    def to_dict(self, data: Any) -> Dict[str, Any]:
+        return asdict(data)

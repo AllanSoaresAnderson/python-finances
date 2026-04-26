@@ -51,7 +51,7 @@ class BagginsRepositoryImpl(BagginsRepository):
                     baggins.start_date.isoformat() if baggins.start_date else None,
                     baggins.type.value,
                     baggins.amount_time,
-                    baggins.date_created.isoformat() if baggins.date_created else None,
+                    datetime.now().isoformat(),
                     baggins.deletion_date.isoformat() if baggins.deletion_date else None,
                 )
             )
@@ -107,7 +107,7 @@ class BagginsRepositoryImpl(BagginsRepository):
 
     # 🔹 FIND ALL
     def find_all(self) -> List[Baggins]:
-        sql = 'SELECT * FROM baggins'
+        sql = 'SELECT * FROM baggins WHERE deletion_date IS NULL'
 
         with self.database.get_connection() as conn:
             cursor = conn.cursor()

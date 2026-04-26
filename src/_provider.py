@@ -4,7 +4,10 @@ from application.csv_reader import CsvReaderImpl
 from application.mapper.baggins_mapper import BagginsMapper
 from application.register_file_use_case import RegisterFileUseCaseImpl
 from application.use_case.crud_file_use_case import CrudFileUseCaseImpl
-from domain.interfaces import CsvReader, MapperUseCase, CrudFileUseCase, CrudRepository, BagginsRepository
+from application.use_case.csv_writer import CsvWriterUseCaseImpl
+from application.use_case.show_entities_in_file_use_case import ShowEntitiesInFileUseCaseImpl
+from domain.interfaces import CsvReader, MapperUseCase, CrudFileUseCase, CrudRepository, BagginsRepository, \
+    CsvWriterUseCase
 from infrastructure.repository.baggins_repository import BagginsRepositoryImpl
 
 load_dotenv()
@@ -82,6 +85,22 @@ def _register_file_use_case_impl() -> RegisterFileUseCaseImpl:
         reader=_csv_reader(),
         mapper=_mapper_use_case(),
         repository=_crud_file_use_case(),
+    )
+
+
+def _csv_writer_use_case_impl() -> CsvWriterUseCaseImpl:
+    return CsvWriterUseCaseImpl()
+
+
+def _csv_writer_use_case() -> CsvWriterUseCase:
+    return _csv_writer_use_case_impl()
+
+
+def _show_entities_in_file_use_case_impl() -> ShowEntitiesInFileUseCaseImpl:
+    return ShowEntitiesInFileUseCaseImpl(
+        repository=_crud_repository(),
+        mapper=_mapper_use_case(),
+        writer=_csv_writer_use_case()
     )
 
 
