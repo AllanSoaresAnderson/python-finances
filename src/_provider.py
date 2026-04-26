@@ -2,13 +2,16 @@ from dotenv import load_dotenv
 
 from application.csv_reader import CsvReaderImpl
 from application.mapper.baggins_mapper import BagginsMapper
+from application.mapper.entity_mapper import EntityMapper
 from application.register_file_use_case import RegisterFileUseCaseImpl
 from application.use_case.crud_file_use_case import CrudFileUseCaseImpl
 from application.use_case.csv_writer import CsvWriterUseCaseImpl
 from application.use_case.show_entities_in_file_use_case import ShowEntitiesInFileUseCaseImpl
+from domain.enum import Table
 from domain.interfaces import CsvReader, MapperUseCase, CrudFileUseCase, CrudRepository, BagginsRepository, \
-    CsvWriterUseCase
+    CsvWriterUseCase, EntityRepository
 from infrastructure.repository.baggins_repository import BagginsRepositoryImpl
+from infrastructure.repository.entity_repository import EntityRepositoryImpl
 
 load_dotenv()
 from os import getenv
@@ -52,8 +55,18 @@ def _baggins_mapper() -> BagginsMapper:
     return BagginsMapper()
 
 
-def _mapper_use_case() -> MapperUseCase:
-    return _baggins_mapper()
+def _entity_mapper() -> EntityMapper:
+    return EntityMapper()
+
+
+def _mapper_use_case(table: Table) -> MapperUseCase:
+    if table == Table.BAGGINS:
+        return _baggins_mapper()
+
+    if table == Table.ENTITY:
+        return _entity_mapper()
+
+    raise ValueError('Invalid table')
 
 
 def _baggins_repository_impl():
@@ -66,25 +79,41 @@ def _baggins_repository() -> BagginsRepository:
     return _baggins_repository_impl()
 
 
-def _crud_repository() -> CrudRepository:
-    return _baggins_repository()
-
-
-def _crud_file_use_case_impl() -> CrudFileUseCaseImpl:
-    return CrudFileUseCaseImpl(
-        repository=_crud_repository(),
+def _entity_repository_impl() -> EntityRepositoryImpl:
+    return EntityRepositoryImpl(
+        database=_database_connection_sqlite(),
     )
 
 
-def _crud_file_use_case() -> CrudFileUseCase:
-    return _crud_file_use_case_impl()
+def _entity_repository() -> EntityRepository:
+    return _entity_repository_impl()
 
 
-def _register_file_use_case_impl() -> RegisterFileUseCaseImpl:
+def _crud_repository(table: Table) -> CrudRepository:
+    if table == Table.BAGGINS:
+        return _baggins_repository()
+
+    if table == Table.ENTITY:
+        return _entity_repository()
+
+    raise ValueError('Invalid table')
+
+
+def _crud_file_use_case_impl(table: Table) -> CrudFileUseCaseImpl:
+    return CrudFileUseCaseImpl(
+        repository=_crud_repository(table),
+    )
+
+
+def _crud_file_use_case(table: Table) -> CrudFileUseCase:
+    return _crud_file_use_case_impl(table)
+
+
+def _register_file_use_case_impl(table: Table) -> RegisterFileUseCaseImpl:
     return RegisterFileUseCaseImpl(
         reader=_csv_reader(),
-        mapper=_mapper_use_case(),
-        repository=_crud_file_use_case(),
+        mapper=_mapper_use_case(table),
+        repository=_crud_file_use_case(table),
     )
 
 
@@ -96,10 +125,10 @@ def _csv_writer_use_case() -> CsvWriterUseCase:
     return _csv_writer_use_case_impl()
 
 
-def _show_entities_in_file_use_case_impl() -> ShowEntitiesInFileUseCaseImpl:
+def _show_entities_in_file_use_case_impl(table: Table) -> ShowEntitiesInFileUseCaseImpl:
     return ShowEntitiesInFileUseCaseImpl(
-        repository=_crud_repository(),
-        mapper=_mapper_use_case(),
+        repository=_crud_repository(table),
+        mapper=_mapper_use_case(table),
         writer=_csv_writer_use_case()
     )
 

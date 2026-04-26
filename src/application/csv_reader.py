@@ -10,7 +10,7 @@ class CsvReaderImpl(CsvReader):
         data = []
 
         with open(path, newline='', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
+            reader = csv.DictReader(file, delimiter=';')
 
             for row in reader:
                 data.append(row)

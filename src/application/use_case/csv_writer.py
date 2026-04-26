@@ -30,7 +30,7 @@ class CsvWriterUseCaseImpl(CsvWriterUseCase):
         fieldnames = list(normalized_data[0].keys())
 
         with open(path, mode='w', newline='', encoding='utf-8') as file:
-            writer = DictWriter(file, fieldnames=fieldnames)
+            writer = DictWriter(file, fieldnames=fieldnames, delimiter=';')
 
             writer.writeheader()
             writer.writerows(normalized_data)

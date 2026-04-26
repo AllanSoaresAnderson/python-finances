@@ -24,3 +24,11 @@ class VariableFrequencyTransaction(Enum):
 class TypeBaggins(Enum):
     MONTHLY = 'M'
     VARIABLE = 'V'
+
+
+class Table(Enum):
+    BAGGINS = 'baggins'
+    ENTITY = 'entity'
+    TRANSACTION = 'transaction'
+    INSTALLMENT = 'installment'
+    PAYMENT = 'payment'

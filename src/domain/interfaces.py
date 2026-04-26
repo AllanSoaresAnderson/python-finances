@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, TypeVar, Generic
+
+from domain.entities import Entity
 from src.domain.entities import Baggins
 
 T = TypeVar("T")
@@ -46,6 +48,8 @@ class CrudRepository(ABC, Generic[T]):
 class BagginsRepository(CrudRepository[Baggins], ABC):
     pass
 
+class EntityRepository(CrudRepository[Entity], ABC):
+    pass
 
 class InsertBagginsUseCase(ABC):
     @abstractmethod
